@@ -1,0 +1,225 @@
+"Last Change 02/18/14
+"vim:fdm=marker
+
+"Don't be like vi
+if &compatible
+  set nocompatible
+endif
+
+"Vundle Setup
+filetype off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#begin()
+  Plugin 'Valloric/YouCompleteMe'
+  Plugin 'airblade/vim-gitgutter'
+  Plugin 'b4winckler/vim-objc'
+  Plugin 'bling/vim-airline'
+  Plugin 'chriskempson/base16-vim'
+  Plugin 'gmarik/vundle'
+  Plugin 'irahimi/cocoa.vim'
+  Plugin 'kien/ctrlp.vim'
+  Plugin 'majutsushi/tagbar'
+  Plugin 'sjl/gundo.vim'
+  Plugin 'tikhomirov/vim-glsl'
+  Plugin 'tpope/vim-commentary'
+  Plugin 'tpope/vim-dispatch'
+  Plugin 'tpope/vim-eunuch'
+  Plugin 'tpope/vim-fugitive'
+  Plugin 'tpope/vim-vinegar'
+  Plugin 'tristen/vim-sparkup'
+  Plugin 'wting/rust.vim'
+call vundle#end()
+filetype plugin indent on
+
+let g:airline#extensions#tabline#enabled = 1 "Sweet tagbar included with airline
+let g:airline_powerline_fonts = 1
+let g:airline_theme="light"
+
+let g:ycm_auto_trigger = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+
+let g:ctrlp_open_new_file = 't'
+let g:ctrlp_open_multiple_files = 'hj'
+let g:ctrlp_map = '<C-p>'
+
+let g:tagbar_ctags_bin = "/Users/irahimi/.brew/bin/ctags"
+
+nnoremap <F2> :TagbarToggle<CR>
+nnoremap <F3> :GundoToggle<CR>
+
+set t_Co=256 "256 color terminal
+set background=dark
+color muon "Colorscheme
+syntax on "Syntax highlighting
+
+"MacVim Settings {{{
+if has("gui_macvim")
+  set guifont=Source\ Code\ Pro\ for\ Powerline:h10
+  set guioptions=aAc
+
+  let base16colorspace=256
+  color base16-eighties
+
+  nnoremap <leader>= :<C-U>let &transparency+=v:count1<CR>
+  nnoremap <leader>- :<C-U>let &transparency-=v:count1<CR>
+  set transparency=5
+endif " }}}
+
+set number
+set nowrap "Don't wrap lines
+set spelllang=en_us "English spellcheck
+set encoding=utf8 nobomb "Unicode no-BOM
+set shiftwidth=2 softtabstop=2 tabstop=2 expandtab
+set autoindent smarttab nosmartindent shiftround cindent
+set smartcase ignorecase incsearch hlsearch
+set scrolloff=2 sidescrolloff=2
+set list listchars=trail:·,tab:»¦,nbsp:&,extends:> "Invisibles display
+set backspace=indent,eol,start "Backspace over whitespace
+set nostartofline "Movements don't change column
+set novisualbell noerrorbells "No bells
+set virtualedit=onemore,block
+set lazyredraw "Don't redraw while running macros
+set ttyfast "Send characters rather than insert commands to the terminal
+set matchtime=3 "Highlight parens for .3 seconds
+set noautochdir "Don't change directories
+set nohidden "Disallow hidden buffers
+set switchbuf=newtab
+set display=lastline "Show full lines and unprintables in hex
+set gdefault "Searchs have g flag by default
+set formatoptions=tqnlMj
+set clipboard=unnamed
+set laststatus=2
+set exrc
+set secure
+
+set backup undofile
+set noswapfile
+set undodir=~/.vim/tmp/undo//
+set backupdir=~/.vim/tmp/backup//
+set backupskip=/tmp/*,/private/tmp/*" "Allow vim to edit a crontab again
+
+set foldenable
+set foldmethod=marker foldopen=search,tag,undo,mark,percent,block,insert
+set fillchars=fold:\  
+set switchbuf=useopen,usetab,newtab
+
+set completeopt=menuone,longest,preview "Tab Completion
+set nowildmenu "No wildmenu
+set wildmode=longest:full,list:full
+set wildignore=.hg,.git,.svn,.DS_Store
+
+set printoptions=syntax:a,header:2,number:y,left:5pc,top:2pc,wrap:y,duplex:off,paper:letter
+set printencoding=utf8
+
+iabbrev xdate <C-R>=strftime("%D")<CR>
+cabbrev W w
+cabbrev Q q
+
+if has("digraphs")
+  digraph ., 8230 "…
+  digraph ~i 8747 "∫
+  digraph `` 8242 "′
+  digraph ~d 8706 "∂
+endif
+
+"Mappings {{{
+set esckeys notimeout ttimeout ttimeoutlen=10 "No timeout on mappings
+let mapleader = ','
+
+"Normal
+noremap j gj
+noremap k gk
+nnoremap <Right> :tabnext<CR>
+nnoremap <Left>  :tabprev<CR>
+nnoremap <Up>    :tabnew<CR>
+nnoremap <Down><Down>    :tabclose<CR>
+nnoremap <silent> <leader>d :silent exec(":!open ". shellescape(expand("%:p:h"))) <bar> redraw!<CR>
+nnoremap <silent> <leader>h :nohls<CR>
+nnoremap <F1> <NOP>
+nnoremap <leader>m :make<CR>
+nnoremap <leader>s :w<CR>
+nnoremap <leader>S :wa<CR>
+nnoremap <leader>q :x<CR>
+nnoremap <leader>Q :xa<CR>
+nnoremap <silent> <leader>cw :%s/\v^\s+$//<CR>
+
+"Insert
+inoremap <S-Tab> <C-D>
+inoremap <F1> <NOP>
+inoremap jk <ESC>
+inoremap kj <ESC>
+"inoremap <expr><Tab> <C-x><C-o>
+
+"Visual
+vnoremap <F1> <NOP>
+
+"Command
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+
+"Operator (Text Object)
+"Folds
+vnoremap az :<C-U>silent! normal! [zv]z$<CR>
+omap az :normal Vaf<CR>
+vnoremap iz :<C-U>silent! normal! [zjv]zk$<CR>
+omap iz :normal Vif<CR>
+"}}}
+
+"Auto Commands {{{
+if has("autocmd")
+  augroup General
+    autocmd!
+    autocmd FocusLost silent! wa
+    autocmd VimEnter * nohlsearch
+    "Shamelessly incorporated from Steve Losh's (sjl) vimrc
+    autocmd BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \     execute 'normal! g`"zvzz' |
+        \ endif
+  augroup END
+
+
+  augroup Python
+    autocmd!
+    autocmd FileType python setlocal wildignore+=*.pyc
+    autocmd FileType python setlocal sts=4 ts=4 sw=4 "Setup tabs for python
+    autocmd FileType python setlocal keywordprg=pydoc "make K lookup for python
+  augroup END
+
+  augroup Text
+    autocmd!
+    autocmd FileType text setlocal spell
+    autocmd FileType text setlocal tw=80
+  augroup END
+
+  augroup Vim
+    autocmd!
+    "<leader>x is REPL shortcut
+    autocmd FileType vim nnoremap <buffer> <leader>x mq^"qy$<ESC>:<C-R>q<CR>`q
+    autocmd FileType vim setlocal keywordprg=:help
+    autocmd BufWritePost ~/.vim/vimrc,vimrc source % | AirlineRefresh
+  augroup END
+
+  augroup Assembly
+    autocmd!
+    autocmd Filetype asm setlocal ft=nasm
+    autocmd Filetype nasm setlocal commentstring=;\ %s
+  augroup END
+
+  augroup TeX
+    autocmd!
+    autocmd FileType plaintex,st setlocal ft=tex
+    autocmd FileType tex setlocal wildignore+=*.aux,*.toc
+  augroup END
+
+  augroup Java
+    autocmd!
+    autocmd FileType java setlocal wildignore+=*.class
+  augroup END
+
+  augroup CFamily
+    autocmd!
+  augroup END
+endif
+" }}}
+
