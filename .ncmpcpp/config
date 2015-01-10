@@ -1,0 +1,47 @@
+mpd_host = localhost
+mpd_port = 6600
+mpd_music_dir = ~/Music
+
+# UI
+user_interface = alternative
+
+song_list_format = {%a - }{%t}|{$8%f$9}$R{$3(%l)$9}
+song_status_format = {{%a{ "%b"{ (%y)}} - }{%t}}|{%f}
+song_library_format = {%n - }{%t}|{%f}
+tag_editor_album_format = {(%y) }%b
+# media_library_left_column = A
+search_engine_display_mode = columns
+playlist_editor_display_mode = columns
+display_bitrate = yes
+
+execute_on_song_change = osascript -e 'display notification do shell script "mpc | head -n1"'
+
+
+
+alternative_header_first_line_format = $b$5$aqqu$/a$9 {$3%t$9}|{%f} $5$atqq$/a$9$/b
+alternative_header_second_line_format = {{$5$b%a$/b$9}{ - $7%b$9}{ ($6%y$9)}}|{%D}
+
+# Visualizer
+# visualizer_fifo_path = /Users/irahimi/.mpd/visualizer.fifo
+# visualizer_output_name = "Visualizer feed"
+# visualizer_in_stereo = yes
+# visualizer_sync_interval = 30
+# visualizer_type = spectrum
+
+# Colors
+colors_enabled = yes
+
+main_window_color = white
+main_window_highlight_color = cyan
+
+active_column_color = white
+
+statusbar_color = cyan
+progressbar_color = cyan
+
+state_line_color = cyan
+state_flags_color = magenta
+
+color1 = white
+color2 = white
+visualizer_color = cyan
