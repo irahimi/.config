@@ -1,0 +1,17 @@
+port "6600"
+
+db_file "~/.mpd/database"
+log_file "~/.mpd/log"
+
+pid_file "~/.mpd/pid"
+state_file "~/.mpd/state"
+music_directory "/Volumes/External/Music"
+playlist_directory "`/.mpd/playlists"
+
+auto_update "yes"
+
+audio_output {
+  type "osx"
+  name "System Audio"
+  mixer_type "software"
+}
