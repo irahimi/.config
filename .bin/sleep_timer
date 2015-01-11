@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+at $@ << EOF
+pmset sleepnow &> /dev/null
+EOF

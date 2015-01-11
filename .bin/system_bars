@@ -1,0 +1,123 @@
+#!/usr/bin/env zsh
+
+autoload -U colors && colors
+
+RESET='\033[0m'
+
+# Progress bar function:
+progress_bar () {
+  integer count=0;
+
+  PERCENTAGE="$1";
+  COLOR1="$2";
+  COLOR2=`if [[ -n "$3" ]]; then echo "$3"; else echo "$RESET"; fi`
+  CHAR1=`if [[ -n "$4" ]]; then echo "$4"; else echo "\u2589"; fi`
+  CHAR2=`if [[ -n "$5" ]]; then echo "$5"; else echo " "; fi`
+
+  echo -ne $COLOR1
+
+  while [[ $count -lt `echo "scale=0;($PERCENTAGE + 5) / 10" | bc` ]]; do
+    echo -n $CHAR1;
+    count=`expr $count + 1`;
+  done;
+
+  echo -ne $COLOR2
+
+  while [[ $count -lt 10 ]]; do
+    echo -n $CHAR2;
+    count=`expr $count + 1`;
+  done;
+
+  echo -n "$RESET"
+  echo ' '$PERCENTAGE'%';
+
+  unset count;
+  unset PERCENTAGE;
+  unset COLOR1;
+  unset COLOR2;
+}
+
+FULL_CHAR="#"
+BLANK_CHAR=" "
+
+TOP_OUTPUT=`top -l2 | awk -v n=0 '/CPU usage/ { if (n==1) {print $3 + $5}; if (n==0) {n++} }'`;
+
+VMSTAT=`vm_stat`
+
+FREE=`echo $VMSTAT | awk '/free:/  {print $3}'`
+ACTIVE=`echo $VMSTAT | awk '/ active/ {print $3}'`
+INACTIVE=`echo $VMSTAT | awk '/inactive/ {print $3}'`
+WIRED=`echo $VMSTAT | awk '/wired/ {print $4}'`
+MEM_USAGE=`echo "scale=2;(($ACTIVE + $INACTIVE + $WIRED) * 100 ) / ($FREE + $ACTIVE + $INACTIVE + $WIRED)" | bc`
+
+PAGEINS=`echo $VMSTAT | awk '/Pageins/  {print $2}'`
+PAGEOUT=`echo $VMSTAT | awk '/Pageouts/ {print $2}'`
+PAGERAT=`echo "scale=2;($PAGEINS * 100) / ($PAGEINS + $PAGEOUT)" | bc`
+
+USED=`df | awk '/\/$/ {print $3}'`;
+AVAIL=`df | awk '/\/$/ {print $4}'`;
+HD_USAGE=`echo "scale=2;($USED * 100)/($USED + $AVAIL)" | bc`;
+
+SYSTEMPRO=`system_profiler -detailLevel basic SPPowerDataType | grep mAh`;
+REMAINING=`echo $SYSTEMPRO | grep Remaining | awk '{print $4}'`;
+CAPACITY=`echo $SYSTEMPRO  | grep Capacity  | awk '{print $5}'`;
+CHARGEPER=`echo "scale=2;($REMAINING * 100)/$CAPACITY" | bc`;
+
+echo `date`
+
+echo -n "CPU Usage: "
+progress_bar $TOP_OUTPUT $fg[green] $fg[black] $FULL_CHAR $BLANK_CHAR
+
+echo -n "RAM Usage: ";
+progress_bar $MEM_USAGE $fg[green] $fg[black] $FULL_CHAR $BLANK_CHAR
+
+echo -n 'Paging   : ';
+progress_bar $PAGERAT $fg[green] $fg[black] $FULL_CHAR $BLANK_CHAR
+
+echo -n "SSD Usage: ";
+
+if [[ $USAGE -ge 90 ]]; then
+  COLOR=$fg[red];
+elif [[ $USAGE -ge 75 ]]; then
+  COLOR=$fg[yellow];
+else
+  COLOR=$fg[green];
+fi
+
+progress_bar $HD_USAGE $COLOR $fg[black] $FULL_CHAR $BLANK_CHAR
+
+echo -n "Battery %: ";
+
+if [[ $CHARGEPER -ge 85 ]]; then
+  COLOR=$fg[green];
+elif [[ $CHARGEPER -ge 50 ]]; then
+  COLOR=$fg[yellow];
+else
+  COLOR=$fg[red];
+fi
+
+progress_bar $CHARGEPER $COLOR $fg[black] $FULL_CHAR $BLANK_CHAR
+
+unset TOP_OUTPUT;
+
+unset FREE;
+unset ACTIVE;
+unset INACTIVE;
+unset WIRED;
+unset MEM_USAGE;
+
+unset PAGEINS;
+unset PAGEOUT;
+unset PAGERAT;
+unset VMSTAT;
+
+unset USED;
+unset AVAIL;
+unset HD_USAGE;
+unset COLOR;
+
+unset SYSTEMPRO;
+unset REMAINING;
+unset CAPACITY;
+unset CHARGEPER;
+unset COLOR;

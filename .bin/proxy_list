@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+
+autoload -U colors && colors
+RESET='\033[0m'
+
+PROXY=`system_profiler -detailLevel basic SPNetworkDataType | grep Proxy | sed 's/^ *//g'`
+
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
+for proxy in `echo $PROXY | grep Enabled`; do
+  echo -n `echo $proxy | awk '{print $1 ":"}'`
+  if [[ `echo $proxy | awk '{print $NF}'` != "No" ]]; then
+    proxy_type=`echo $proxy | awk '{print $1}'`
+    attributes=`echo $PROXY | grep "$proxy_type "`
+    server=`echo $attributes | grep Server | awk '{print $NF}'`
+    port=`echo $attributes | grep Port | awk '{print $NF}'`
+    echo " $fg[cyan]$server$RESET:$fg[magenta]$port$RESET"
+  else
+    echo " $fg[red]N/A$RESET"
+  fi
+done
+IFS=$SAVEIFS
+
+unset PROXY
+unset SAVEIFS
