@@ -6,7 +6,7 @@ log_file "~/.mpd/log"
 pid_file "~/.mpd/pid"
 state_file "~/.mpd/state"
 music_directory "/Volumes/External/Music"
-playlist_directory "`/.mpd/playlists"
+playlist_directory "~/.mpd/playlists"
 
 auto_update "yes"
 

@@ -14,7 +14,7 @@ search_engine_display_mode = columns
 playlist_editor_display_mode = columns
 display_bitrate = yes
 
-execute_on_song_change = osascript -e 'display notification do shell script "mpc | head -n1"'
+execute_on_song_change = albumart.sh
 
 
 

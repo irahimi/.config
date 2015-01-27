@@ -72,6 +72,7 @@ export PATH=~/.bin:~/.brew/bin:~/.brew/sbin:/usr/local/bin:/usr/texbin:~/.cabal/
 
 export MANPATH=~/.brew/share/man:$MANPATH
 export GOPATH=~/Projects/Go
+export DYLD_LIBRARY_PATH=/usr/local/lib
 export EDITOR="vim"
 export PAGER="vimpager"
 export CLICOLOR=1
@@ -93,7 +94,7 @@ todo() { vim ~/.todo }
 icns2png() { sips -s format png $1 --out $(echo $1 | sed "s/icns/png/g") }
 ccal() { \cal $@ | sed -E "s/(^|[^0-9])($(date +%e))( |$)/\1$(echo -e "\033[0;36m\2\033[0m")\3/" }
 find-book() { mdfind -onlyin ~/Documents/Books/ $@ }
-albumart() { curl -s "http://www.albumart.org/index.php?searchk=`mpc | head -n1 | tr ' ' '+'`&itempage=1&newsearch=1&searchindex=Music" | python -c "import sys; from lxml.etree import parse, HTMLParser; print parse(sys.stdin, HTMLParser()).xpath('//div[@id=\'main_left\']/ul/li/div/a/img/@src')[0]" }
+rustup() { curl -L https://static.rust-lang.org/rustup.sh | sudo sh }
 
 stty -ixany
 stty ixon
